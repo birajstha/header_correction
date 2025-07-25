@@ -13,6 +13,14 @@ For each T1w file found in your dataset, the tool:
 
 ### Install
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/nifti-header-correction.git
+cd nifti-header-correction
+
+# Or download the script directly
+wget https://raw.githubusercontent.com/yourusername/nifti-header-correction/main/niwrap_correct_headers.py
+
+# Install dependencies
 pip install niwrap rich
 ```
 
@@ -108,4 +116,4 @@ The tool shows a nice progress bar and summary:
 
 **AFNI errors**: Make sure AFNI is installed and in your PATH
 
-**Permission errors**: Ensure write permissions for in-place processing or
+**Permission errors**: Ensure write permissions for in-place processing
