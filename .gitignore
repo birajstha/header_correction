@@ -1,0 +1,17 @@
+singularity.def
+2075_T1w_trial
+check_headers.py
+dataset
+niwrap                     
+styx_tmp
+after           
+correct_headers.py        
+docker_script.sh    
+singularity.def       
+venv
+before          
+cpac-with-bids2table.sif  
+logs              
+output                     
+singularity_shell.sh  
+venv-cpac
