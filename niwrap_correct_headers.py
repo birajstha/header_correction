@@ -16,24 +16,43 @@ from rich import box
 from rich.prompt import Confirm
 import time
 import concurrent.futures
+import nibabel as nib
 
 console = Console()
 
 def convert_4d_to_3d(input_image_path, output_image_path):
     """
-    Convert a 4D NIfTI image to a 3D NIfTI image by extracting the first volume using AFNI.
+    Convert a 4D NIfTI image to a 3D NIfTI image by extracting the first volume using nibabel only.
+    This preserves image quality without any resampling.
     """
-    afni.v_3dcalc(
-        in_file_a=input_image_path + "[0]",  # Input dataset, first volume
-        expr="a",                    # Just copy the input
-        prefix=output_image_path
-    )
+    # Load the 4D image
+    img = nib.load(input_image_path)
+    
+    # Extract first volume (3D)
+    if len(img.shape) == 4:
+        # Extract first timepoint
+        data_3d = img.get_fdata()[:, :, :, 0]
+    else:
+        # Already 3D, just copy
+        data_3d = img.get_fdata()
+    
+    # Update header for 3D
+    hdr = img.header.copy()
+    hdr['dim'][0] = 3        # Set number of dimensions to 3
+    hdr['dim'][4] = 1        # Set time dimension to 1
+    hdr['pixdim'][4] = 1.0   # Set time dimension voxel size to 1
+    
+    # Create new 3D image with corrected header
+    img_3d = nib.Nifti1Image(data_3d, img.affine, hdr)
+    
+    # Save the 3D image
+    nib.save(img_3d, output_image_path)
 
 def deoblique(input_image_path, output_image_path):
     """
     Deoblique a NIfTI image using AFNI's 3dWarp.
     """
-    afni.v_3d_warp(dataset=input_image_path, prefix=output_image_path, deoblique=True)
+    afni.v_3d_warp(dataset=input_image_path, gridset=input_image_path, prefix=output_image_path, deoblique=True)
 
 def reorient_to_orientation(input_image_path, output_image_path, orientation="LPI"):
     """
