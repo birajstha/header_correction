@@ -5,7 +5,7 @@ A command-line tool for processing T1w NIfTI files with 4D→3D conversion, deob
 ## What it does
 
 For each T1w file found in your dataset, the tool:
-1. **Extracts first volume** from 4D images (if needed)
+1. **Corrects the dim0 and pixdim[4] values using nibabel** 
 2. **Removes obliquity** using AFNI's 3dWarp 
 3. **Reorients to target orientation** (default: LPI)
 
@@ -21,7 +21,7 @@ cd nifti-header-correction
 wget https://raw.githubusercontent.com/yourusername/nifti-header-correction/main/niwrap_correct_headers.py
 
 # Install dependencies
-pip install niwrap rich
+pip install niwrap rich nibabel
 ```
 
 ### Run
@@ -81,14 +81,10 @@ dataset/
 
 ## Requirements
 
-- **AFNI** (for 3dcalc, 3dWarp, 3dresample)
+- **Docker** niwrap uses docker in the backend
 - **Python 3.8+**
 - **niwrap** and **rich** packages
 
-Make sure AFNI is in your PATH:
-```bash
-which 3dcalc  # should return a path
-```
 
 ## Output
 
@@ -113,7 +109,5 @@ The tool shows a nice progress bar and summary:
 ## Troubleshooting
 
 **"No T1w files found"**: Check your dataset path and ensure files end with `T1w.nii.gz`
-
-**AFNI errors**: Make sure AFNI is installed and in your PATH
 
 **Permission errors**: Ensure write permissions for in-place processing
